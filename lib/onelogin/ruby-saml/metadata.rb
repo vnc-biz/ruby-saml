@@ -25,27 +25,6 @@ module OneLogin
         if settings.issuer
           root.attributes["entityID"] = settings.issuer
         end
-        if settings.single_logout_service_url
-          sp_sso.add_element "md:SingleLogoutService", {
-              "Binding" => settings.single_logout_service_binding,
-              "Location" => settings.single_logout_service_url,
-              "ResponseLocation" => settings.single_logout_service_url,
-              "isDefault" => true,
-              "index" => 0
-          }
-        end
-        if settings.name_identifier_format
-          name_id = sp_sso.add_element "md:NameIDFormat"
-          name_id.text = settings.name_identifier_format
-        end
-        if settings.assertion_consumer_service_url
-          sp_sso.add_element "md:AssertionConsumerService", {
-              "Binding" => settings.assertion_consumer_service_binding,
-              "Location" => settings.assertion_consumer_service_url,
-              "isDefault" => true,
-              "index" => 0
-          }
-        end
 
         # Add KeyDescriptor if messages will be signed
         cert = settings.get_sp_cert()
@@ -90,7 +69,27 @@ module OneLogin
           private_key = settings.get_sp_key()
           meta_doc.sign_document(private_key, cert, settings.security[:signature_method], settings.security[:digest_method])
         end
-
+        if settings.single_logout_service_url
+          sp_sso.add_element "md:SingleLogoutService", {
+              "Binding" => settings.single_logout_service_binding,
+              "Location" => settings.single_logout_service_url,
+              "ResponseLocation" => settings.single_logout_service_url,
+              "isDefault" => true,
+              "index" => 0
+          }
+        end
+        if settings.name_identifier_format
+          name_id = sp_sso.add_element "md:NameIDFormat"
+          name_id.text = settings.name_identifier_format
+        end
+        if settings.assertion_consumer_service_url
+          sp_sso.add_element "md:AssertionConsumerService", {
+              "Binding" => settings.assertion_consumer_service_binding,
+              "Location" => settings.assertion_consumer_service_url,
+              "isDefault" => true,
+              "index" => 0
+          }
+        end 
         ret = ""
         # pretty print the XML so IdP administrators can easily see what the SP supports
         if pretty_print
