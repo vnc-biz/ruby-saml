@@ -65,7 +65,11 @@ module OneLogin
       #    Attributes.single_value_compatibility = false
       #    response.attributes['mail']  # => ['user@example.com','user@example.net']
       def [](name)
-        self.class.single_value_compatibility ? single(canonize_name(name)) : multi(canonize_name(name))
+	if name == "isMemberOf"
+	   multi(canonize_name(name))
+	else
+	   single(canonize_name(name))
+	end	
       end
 
       # Return all attributes as an array
